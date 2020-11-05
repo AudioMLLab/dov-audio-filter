@@ -1,0 +1,5 @@
+*.swp
+*.swo
+data/
+.ipynb_checkpoints/
+*.zip
