@@ -2,7 +2,7 @@ from gccphat import gcc_phat
 import pandas as pd
 import numpy as np
 import pickle
-
+import time
 
 COLNAMES = [*[f'gccphat_{i}_{j}_{d}' for i in range(4)
                                      for j in range(i+1, 4)
@@ -54,14 +54,23 @@ def process_signal(audio_signals, frame_timelen, fs, max_tau):
 
     full_sig = [ [] for i in range(4) ]
 
+    iter_timestamp = None
+
     while cursor <= sample_len - frame_indexlen:
+
+        cur_time = time.time()
+        if iter_timestamp is not None:
+            time_delta =  cur_time - iter_timestamp
+            print(time_delta)
+        iter_timestamp = cur_time
+
         frame_sig_hann = [ [] for i in range(4) ]
         frame_sig = [ [] for i in range(4) ]
         for i in range(4):
             frame_sig[i] = audio_signals[i][cursor:cursor+frame_indexlen]
             frame_sig_hann[i] = hann_signals[i][cursor:cursor+frame_indexlen]
 
-        data_featurized = _get_featurized_data(frame_sig, fs, max_tau)
+        data_featurized = _get_featurized_data(frame_sig_hann, fs, max_tau)
 
         data_featurized[np.isnan(data_featurized)] = 0.0
 
