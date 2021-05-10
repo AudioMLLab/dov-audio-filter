@@ -11,7 +11,7 @@ COLNAMES = [*[f'gccphat_{i}_{j}_{d}' for i in range(4)
                                         for j in range(i+1, 4)
                                         for k in range(23)]]
 
-with open('model-45to45.sav', 'rb') as f:
+with open('model-90to90.sav', 'rb') as f:
     CLASSIFIER = pickle.load(f)
 
 def _get_featurized_data(frame_signals, fs, max_tau):

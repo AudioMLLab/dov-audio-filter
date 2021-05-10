@@ -19,25 +19,32 @@ fnames_whats_up_gamers = ["whats_up_gamers_v3/whats-up-gamers-0%d.wav" % i for i
 
 fnames_podcast = ["podcast_gone_wrong/podcast_gone_wrong-0%d.wav" % i for i in range(1,5) ]
 
+file_prefix = sys.argv[1]
+
+fnames_dynamic = [f"{file_prefix}-0{i}.wav" for i in range(1,5)]
+
 # print(fnames_whats_up_gamers)
-audio_loads = [ librosa.load(fn, sr=None) for fn in fnames_whats_up_gamers ]
+audio_loads = [ librosa.load(fn, sr=None) for fn in fnames_dynamic ]
+# audio_loads = [ librosa.load(fn, sr=None) for fn in fnames ]
 
 fs = audio_loads[0][1]
 audio_data = [ entry[0] for entry in audio_loads ]
 max_tau = 0.236e-3
 
 try:
-    frame_timelen = int(sys.argv[1]) * 1e-3
-except: 
+    frame_timelen = int(sys.argv[2]) * 1e-3
+except:
     frame_timelen = 400e-3
 
 new_signals = audio_conversion.process_signal(audio_data,
                                               frame_timelen, fs, max_tau)
 
 try:
-    prefix = sys.argv[2]
+    prefix = sys.argv[3]
 except:
-    prefix = 'conversion_output' 
+    prefix = 'conversion_output'
 
 for i in range(len(new_signals)):
     soundfile.write(f'{prefix}_{i}.wav', new_signals[i], fs)
+
+# print(f"FILE WRITTEN TO {prefix}_[0-3].wav !")
